@@ -1,0 +1,76 @@
+body {
+    font-family: Arial, sans-serif;
+    background: #f5f6fa;
+    margin: 0;
+}
+
+/* Login Page */
+
+.login-container {
+    width: 300px;
+    margin: 120px auto;
+    padding: 30px;
+    background: white;
+    border-radius: 8px;
+    text-align: center;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+}
+
+.login-container h1 {
+    margin-bottom: 20px;
+}
+
+input {
+    width: 100%;
+    padding: 10px;
+    margin: 8px 0;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+}
+
+button {
+    width: 100%;
+    padding: 10px;
+    background: #2f6fed;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+button:hover {
+    background: #1f57c8;
+}
+
+#error {
+    color: red;
+    font-size: 14px;
+}
+
+/* Dashboard */
+
+header {
+    background: #2f6fed;
+    color: white;
+    padding: 15px;
+}
+
+main {
+    padding: 30px;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+    background: white;
+}
+
+th, td {
+    padding: 12px;
+    border-bottom: 1px solid #ddd;
+}
+
+th {
+    background: #f1f3f5;
+    text-align: left;
+}
