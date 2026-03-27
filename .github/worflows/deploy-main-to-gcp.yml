@@ -29,19 +29,19 @@ jobs:
         env:
           SSH_USER: ${{ secrets.SSH_USER }}
           SSH_HOST: ${{ secrets.SSH_HOST }}
-          APP_DIR:  app # ${{ vars.APP_DIR }}
-          PM2_NAME: app # ${{ vars.PM2_NAME }}
+          APP_DIR: app
+          PM2_NAME: app
         run: |
           ssh -i ~/.ssh/id_rsa -T "$SSH_USER@$SSH_HOST" <<EOF
             set -e
-
+      
             cd "$APP_DIR"
-
-            git pull
-            sudo npm ci
-
+      
+            git pull origin main
+            npm ci
+      
             pm2 delete "$PM2_NAME" || true
-            pm2 start -f app.mjs --name "$PM2_NAME"
-
+            pm2 start -f server/app.js --name "$PM2_NAME"
+      
             pm2 save
           EOF
