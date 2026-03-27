@@ -1,4 +1,4 @@
-exports.login = async (req, res, next) => {
+export const login = async (req, res, next) => {
   try {
     const { email, password } = req.body;
 
@@ -12,7 +12,7 @@ exports.login = async (req, res, next) => {
   }
 };
 
-exports.register = async (req, res, next) => {
+export const register = async (req, res, next) => {
   try {
     res.json({ message: "Register route placeholder" });
   } catch (err) {
