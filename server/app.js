@@ -40,7 +40,7 @@ if (CONFIG.SECURITY.HELMET_ENABLED) {
       directives: {
         defaultSrc: ["'self'"],
         styleSrc: ["'self'", "'unsafe-inline'"],
-        scriptSrc: ["'self'", "'unsafe-inline'"], // Allow inline scripts
+        scriptSrc: ["'self'"], // Only external scripts allowed
         imgSrc: ["'self'", "data:", "https:"],
       },
     },
