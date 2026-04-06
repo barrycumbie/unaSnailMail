@@ -36,7 +36,7 @@ async function detectEnvironment() {
   
   // Check backend connectivity
   try {
-    const response = await fetch('/api/mail/carriers/status');
+    const response = await fetch('/api/health');
     if (response.ok) {
       backendElement.textContent = '✅ Connected';
       backendElement.className = 'status-success';
