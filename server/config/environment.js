@@ -66,11 +66,12 @@ export const CONFIG = {
   
   // Database configuration
   DATABASE: {
-    URI: ENV.isLocalhost 
-      ? 'mongodb://localhost:27017/una-snail-mail-local'
-      : ENV.isDemo
-        ? 'mongodb://localhost:27017/una-snail-mail-demo'
-        : process.env.MONGODB_URI || 'mongodb://localhost:27017/una-snail-mail',
+    URI: process.env.MONGODB_URI || 
+         (ENV.isLocalhost 
+           ? 'mongodb://localhost:27017/una-snail-mail-local'
+           : ENV.isDemo && ENV.isLocalhost
+             ? 'mongodb://localhost:27017/una-snail-mail-demo'
+             : 'mongodb://localhost:27017/una-snail-mail'),
     
     OPTIONS: {
       maxPoolSize: ENV.isLocalhost ? 5 : 10,

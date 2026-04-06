@@ -104,8 +104,8 @@ const userSchema = new mongoose.Schema({
   timestamps: true
 });
 
-// Indexes
-userSchema.index({ email: 1 });
+// Indexes (unique fields auto-indexed)
+// userSchema.index({ email: 1 }); // Already unique
 userSchema.index({ 'recipientInfo.studentId': 1 });
 userSchema.index({ 'recipientInfo.employeeId': 1 });
 userSchema.index({ 'delivererInfo.employeeId': 1 });

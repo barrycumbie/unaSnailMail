@@ -215,9 +215,9 @@ const mailSchema = new mongoose.Schema({
   timestamps: true
 });
 
-// Indexes for efficient queries
-mailSchema.index({ trackingNumber: 1 });
-mailSchema.index({ internalTrackingId: 1 });
+// Indexes for efficient queries (unique fields auto-indexed)
+// mailSchema.index({ trackingNumber: 1 }); // Already unique
+// mailSchema.index({ internalTrackingId: 1 }); // Already unique  
 mailSchema.index({ recipient: 1 });
 mailSchema.index({ status: 1 });
 mailSchema.index({ carrier: 1 });

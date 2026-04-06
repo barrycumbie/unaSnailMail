@@ -175,8 +175,8 @@ const issueSchema = new mongoose.Schema({
   timestamps: true
 });
 
-// Indexes
-issueSchema.index({ issueId: 1 });
+// Indexes (unique fields auto-indexed)
+// issueSchema.index({ issueId: 1 }); // Already unique
 issueSchema.index({ mailId: 1 });
 issueSchema.index({ trackingNumber: 1 });
 issueSchema.index({ reportedBy: 1 });
