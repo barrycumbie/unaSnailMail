@@ -295,7 +295,9 @@ export const subdomainAuth = (req, res, next) => {
   const subdomain = host.split('.')[0];
   
   // Skip subdomain check in development or for localhost
-  if (process.env.NODE_ENV === 'development' || host.includes('localhost')) {
+  if (process.env.NODE_ENV === 'development' || 
+      host.includes('localhost') || 
+      host.includes('barrycumbie.com')) {
     return next();
   }
   
