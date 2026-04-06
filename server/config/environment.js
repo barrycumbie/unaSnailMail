@@ -5,24 +5,26 @@
 
 // Environment detection
 const detectEnvironment = () => {
-  const hostname = process.env.HOSTNAME || 'localhost';
+  const hostname = process.env.HOSTNAME || process.env.HOST || '';
   const port = process.env.PORT || 8080;
   const nodeEnv = process.env.NODE_ENV || 'development';
   
-  // Check various environment indicators
-  const isLocalhost = hostname.includes('localhost') || 
-                     hostname === '127.0.0.1' ||
-                     hostname.includes('0.0.0.0') ||
-                     process.env.LOCAL_DEV === 'true';
-  
+  // Check for production environment first
   const isProduction = nodeEnv === 'production' ||
                       hostname.includes('una.edu') ||
-                      process.env.PROD === 'true';
+                      process.env.PROD === 'true' ||
+                      process.env.MONGODB_URI; // If MongoDB URI is set, likely production
+  
+  // More specific localhost detection
+  const isLocalhost = (hostname.includes('localhost') || 
+                      hostname === '127.0.0.1' ||
+                      hostname.includes('0.0.0.0') ||
+                      process.env.LOCAL_DEV === 'true') &&
+                     !process.env.MONGODB_URI; // Not localhost if MongoDB URI is explicitly set
                       
   const isDemo = process.env.DEMO_MODE === 'true' ||
-                isLocalhost ||
-                hostname.includes('demo') ||
-                port == 8080;
+                (isLocalhost && port == 8080) || // Only demo if actually localhost
+                hostname.includes('demo');
   
   const isStaging = hostname.includes('staging') ||
                    hostname.includes('test') ||
