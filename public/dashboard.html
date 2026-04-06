@@ -1,57 +1,625 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<title>Mailroom Dashboard</title>
-<link rel="stylesheet" href="style.css">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>UNA SnailMail - Dashboard</title>
+    <link rel="stylesheet" href="style.css">
 </head>
-
 <body>
+    <!-- Header -->
+    <header class="dashboard-header">
+        <div class="header-content">
+            <h1>🐌 UNA SnailMail Dashboard</h1>
+            <div class="user-info">
+                <span id="user-welcome">Welcome!</span>
+                <button id="logout-btn" class="btn-secondary">Logout</button>
+            </div>
+        </div>
+    </header>
 
-<header>
-    <h1>Mailroom Dashboard</h1>
-</header>
+    <!-- Dashboard Navigation -->
+    <nav class="dashboard-nav">
+        <button class="nav-btn active" data-section="overview">📊 Overview</button>
+        <button class="nav-btn" data-section="tracking">🔍 Carrier Tracking</button>
+        <button class="nav-btn" data-section="scan-mail">📦 Scan Mail</button>
+        <button class="nav-btn" data-section="mail-search">🔎 Search Mail</button>
+        <button class="nav-btn" data-section="internal-packages">🏢 Internal Packages</button>
+        <button class="nav-btn" data-section="admin-panel" id="admin-nav-btn" style="display: none;">👑 Admin Panel</button>
+        <button class="nav-btn" data-section="carrier-tools">🚚 Carrier Tools</button>
+    </nav>
 
-<main>
+    <!-- Main Content -->
+    <main class="dashboard-main">
+        
+        <!-- Overview Section -->
+        <section id="overview-section" class="dashboard-section active">
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <h3>📦 Total Mail</h3>
+                    <div class="stat-number" id="total-mail">-</div>
+                </div>
+                <div class="stat-card">
+                    <h3>⏳ Awaiting Pickup</h3>
+                    <div class="stat-number" id="awaiting-pickup">-</div>
+                </div>
+                <div class="stat-card">
+                    <h3>🚚 In Transit</h3>
+                    <div class="stat-number" id="in-transit">-</div>
+                </div>
+                <div class="stat-card">
+                    <h3>✅ Delivered</h3>
+                    <div class="stat-number" id="delivered">-</div>
+                </div>
+            </div>
 
-<h2>Packages</h2>
+            <div class="recent-activity">
+                <h3>Recent Activity</h3>
+                <div id="recent-activity-list">Loading...</div>
+            </div>
 
-<table>
-    <thead>
-        <tr>
-            <th>Recipient</th>
-            <th>Tracking #</th>
-            <th>Carrier</th>
-            <th>Status</th>
-        </tr>
-    </thead>
+            <div class="carrier-status">
+                <h3>🚚 Carrier Services Status</h3>
+                <div id="carrier-status-grid">Loading...</div>
+            </div>
+        </section>
 
-    <tbody>
-        <tr>
-            <td>John Smith</td>
-            <td>1Z999AA10123456784</td>
-            <td>UPS</td>
-            <td>Ready for Pickup</td>
-        </tr>
+        <!-- Carrier Tracking Section -->
+        <section id="tracking-section" class="dashboard-section">
+            <h2>🔍 Carrier Package Tracking</h2>
+            
+            <div class="tracking-demo">
+                <h3>Track Any Package</h3>
+                <div class="tracking-form">
+                    <input type="text" id="track-number" placeholder="Enter tracking number..." 
+                           value="1Z12345E0205271688">
+                    <select id="track-carrier">
+                        <option value="">Auto-detect carrier</option>
+                        <option value="UPS">UPS</option>
+                        <option value="USPS">USPS</option>
+                        <option value="FEDEX">FedEx</option>
+                        <option value="AMAZON">Amazon</option>
+                    </select>
+                    <button id="track-btn" class="btn-primary">Track Package</button>
+                </div>
+                
+                <div class="sample-tracking-numbers">
+                    <h4>Try These Sample Numbers:</h4>
+                    <button class="sample-number" data-number="1Z12345E0205271688" data-carrier="UPS">UPS: 1Z12345E0205271688</button>
+                    <button class="sample-number" data-number="TBA123456789012" data-carrier="AMAZON">Amazon: TBA123456789012</button>
+                    <button class="sample-number" data-number="123456789012" data-carrier="FEDEX">FedEx: 123456789012</button>
+                    <button class="sample-number" data-number="9400123456789012345678" data-carrier="USPS">USPS: 9400123456789012345678</button>
+                </div>
+            </div>
 
-        <tr>
-            <td>Emily Davis</td>
-            <td>9400110200881234567890</td>
-            <td>USPS</td>
-            <td>Processing</td>
-        </tr>
+            <div id="tracking-result" class="tracking-result" style="display: none;"></div>
+        </section>
 
-        <tr>
-            <td>Michael Lee</td>
-            <td>123456789012</td>
-            <td>FedEx</td>
-            <td>Delivered</td>
-        </tr>
-    </tbody>
+        <!-- Scan Mail Section -->
+        <section id="scan-mail-section" class="dashboard-section">
+            <h2>📦 Scan New Mail</h2>
+            
+            <form id="scan-mail-form" class="scan-form">
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label>Tracking Number *</label>
+                        <input type="text" id="scan-tracking" required placeholder="1Z12345E0205271688">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label>Carrier *</label>
+                        <select id="scan-carrier" required>
+                            <option value="">Select Carrier</option>
+                            <option value="UPS">UPS</option>
+                            <option value="USPS">USPS</option>
+                            <option value="FEDEX">FedEx</option>
+                            <option value="AMAZON">Amazon</option>
+                            <option value="DHL">DHL</option>
+                            <option value="OTHER">Other</option>
+                        </select>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label>Mail Type *</label>
+                        <select id="scan-type" required>
+                            <option value="">Select Type</option>
+                            <option value="PACKAGE">Package</option>
+                            <option value="LETTER">Letter</option>
+                            <option value="ENVELOPE">Envelope</option>
+                            <option value="BOX">Box</option>
+                            <option value="TUBE">Tube</option>
+                        </select>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label>Recipient Name *</label>
+                        <input type="text" id="scan-recipient" required placeholder="John Smith">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label>Recipient Email</label>
+                        <input type="email" id="scan-email" placeholder="john.smith@una.edu">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label>Notes</label>
+                        <textarea id="scan-notes" placeholder="Additional notes..."></textarea>
+                    </div>
+                </div>
+                
+                <button type="submit" class="btn-primary btn-large">📦 Scan Mail Item</button>
+            </form>
+        </section>
 
-</table>
+        <!-- Mail Search Section -->
+        <section id="mail-search-section" class="dashboard-section">
+            <h2>🔎 Search Mail</h2>
+            
+            <div class="search-filters">
+                <input type="text" id="search-query" placeholder="Search by tracking number, recipient, or notes...">
+                <select id="search-status">
+                    <option value="">All Statuses</option>
+                    <option value="AWAITING_PICKUP">Awaiting Pickup</option>
+                    <option value="IN_TRANSIT">In Transit</option>
+                    <option value="OUT_FOR_DELIVERY">Out for Delivery</option>
+                    <option value="DELIVERED">Delivered</option>
+                    <option value="RETURNED">Returned</option>
+                </select>
+                <select id="search-carrier">
+                    <option value="">All Carriers</option>
+                    <option value="UPS">UPS</option>
+                    <option value="USPS">USPS</option>
+                    <option value="FEDEX">FedEx</option>
+                    <option value="AMAZON">Amazon</option>
+                </select>
+                <button id="search-btn" class="btn-primary">Search</button>
+            </div>
+            
+            <div id="mail-results" class="mail-results">
+                <p>Enter search criteria to find mail items...</p>
+            </div>
+        </section>
 
-</main>
+        <!-- Internal Packages Section -->
+        <section id="internal-packages-section" class="dashboard-section">
+            <h2>🏢 Internal Package Generation</h2>
+            
+            <div class="form-grid">
+                <!-- Generate Single Package -->
+                <div class="form-card">
+                    <h3>📦 Generate Internal Package</h3>
+                    <form id="generate-internal-form">
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label>Package Type</label>
+                                <select name="type" required>
+                                    <option value="">Select type...</option>
+                                    <option value="CAMPUS_MAIL">📧 Campus Mail</option>
+                                    <option value="INTER_DEPT">🏢 Inter-Department</option>
+                                    <option value="SPECIAL">✨ Special Delivery</option>
+                                    <option value="RUSH">⚡ Rush Delivery</option>
+                                    <option value="FREIGHT">📦 Freight/Large Items</option>
+                                    <option value="CONFIDENTIAL">🔒 Confidential</option>
+                                    <option value="LABORATORY">🧪 Laboratory Items</option>
+                                    <option value="MAINTENANCE">🔧 Maintenance Parts</option>
+                                    <option value="STUDENT">🎓 Student Mail</option>
+                                    <option value="FACULTY">👨‍🏫 Faculty Mail</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label>Priority</label>
+                                <select name="priority" required>
+                                    <option value="STANDARD">📅 Standard (2-3 days)</option>
+                                    <option value="EXPRESS">⏰ Express (1 day)</option>
+                                    <option value="URGENT">🚨 Urgent (Same day)</option>
+                                    <option value="CRITICAL">❗ Critical (Immediate)</option>
+                                </select>
+                            </div>
+                        </div>
 
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label>From Location</label>
+                                <select name="fromLocation" required>
+                                    <option value="">Select origin...</option>
+                                    <option value="MAIN">🏛️ Main Building</option>
+                                    <option value="LIBRARY">📚 Collier Library</option>
+                                    <option value="SCIENCE">🔬 Science Building</option>
+                                    <option value="BUSINESS">💼 Business Building</option>
+                                    <option value="EDUCATION">🎓 Education Building</option>
+                                    <option value="NURSING">🏥 Nursing Building</option>
+                                    <option value="STUDENT_CENTER">🏢 Student Center</option>
+                                    <option value="ADMIN">🏛️ Administrative Building</option>
+                                    <option value="FACILITIES">🔧 Facilities Management</option>
+                                    <option value="ATHLETICS">⚽ Athletics Center</option>
+                                    <option value="DORMITORIES">🏠 Residence Halls</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label>To Location</label>
+                                <select name="toLocation" required>
+                                    <option value="">Select destination...</option>
+                                    <option value="MAIN">🏛️ Main Building</option>
+                                    <option value="LIBRARY">📚 Collier Library</option>
+                                    <option value="SCIENCE">🔬 Science Building</option>
+                                    <option value="BUSINESS">💼 Business Building</option>
+                                    <option value="EDUCATION">🎓 Education Building</option>
+                                    <option value="NURSING">🏥 Nursing Building</option>
+                                    <option value="STUDENT_CENTER">🏢 Student Center</option>
+                                    <option value="ADMIN">🏛️ Administrative Building</option>
+                                    <option value="FACILITIES">🔧 Facilities Management</option>
+                                    <option value="ATHLETICS">⚽ Athletics Center</option>
+                                    <option value="DORMITORIES">🏠 Residence Halls</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label>Recipient Name *</label>
+                                <input type="text" name="recipientName" required placeholder="Enter recipient name...">
+                            </div>
+                            <div class="form-group">
+                                <label>Recipient Email</label>
+                                <input type="email" name="recipientEmail" placeholder="recipient@una.edu">
+                            </div>
+                        </div>
+
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label>Sender Name</label>
+                                <input type="text" name="senderName" placeholder="Enter sender name...">
+                            </div>
+                            <div class="form-group">
+                                <label>Department</label>
+                                <input type="text" name="department" placeholder="e.g., Computer Science">
+                            </div>
+                        </div>
+
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label>Building/Room</label>
+                                <input type="text" name="building" placeholder="e.g., Science Building 101">
+                            </div>
+                            <div class="form-group">
+                                <label>Package Size</label>
+                                <select name="size">
+                                    <option value="">Select size...</option>
+                                    <option value="SMALL">📄 Small (Documents)</option>
+                                    <option value="MEDIUM">📦 Medium (Box)</option>
+                                    <option value="LARGE">📋 Large (Multiple boxes)</option>
+                                    <option value="OVERSIZED">📐 Oversized (Furniture/Equipment)</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label>Weight (lbs)</label>
+                                <input type="number" name="weight" step="0.1" min="0" placeholder="0.0">
+                            </div>
+                            <div class="form-group checkbox-group">
+                                <label>
+                                    <input type="checkbox" name="isConfidential">
+                                    🔒 Confidential Item
+                                </label>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label>Special Instructions</label>
+                            <textarea name="specialInstructions" rows="3" placeholder="Any special handling instructions..."></textarea>
+                        </div>
+
+                        <button type="submit" class="btn-primary">🏷️ Generate Package & Label</button>
+                    </form>
+                </div>
+
+                <!-- Package Result Display -->
+                <div class="form-card">
+                    <h3>📋 Generated Package Details</h3>
+                    <div id="package-result" class="package-result">
+                        <p>Fill out the form to generate an internal package...</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Bulk Package Generation -->
+            <div class="form-card">
+                <h3>📦 Bulk Package Generation</h3>
+                <div class="bulk-upload-area">
+                    <textarea id="bulk-packages-input" rows="10" placeholder="Enter package data (one per line in JSON format):
+{&quot;recipientName&quot;: &quot;John Doe&quot;, &quot;type&quot;: &quot;CAMPUS_MAIL&quot;, &quot;fromLocation&quot;: &quot;MAIN&quot;, &quot;toLocation&quot;: &quot;LIBRARY&quot;}
+{&quot;recipientName&quot;: &quot;Jane Smith&quot;, &quot;type&quot;: &quot;INTER_DEPT&quot;, &quot;fromLocation&quot;: &quot;SCIENCE&quot;, &quot;toLocation&quot;: &quot;BUSINESS&quot;}"></textarea>
+                    <button id="bulk-generate-btn" class="btn-secondary">🏭 Generate Bulk Packages</button>
+                </div>
+                <div id="bulk-results" class="bulk-results"></div>
+            </div>
+
+            <!-- Package Validation Tools -->
+            <div class="tools-grid">
+                <div class="tool-card">
+                    <h3>✅ Validate Internal Tracking</h3>
+                    <input type="text" id="validate-internal-number" placeholder="UNA-CM-MNLB-20260406-12345">
+                    <button id="validate-internal-btn" class="btn-secondary">Validate</button>
+                    <div id="validation-result" class="validation-result"></div>
+                </div>
+
+                <div class="tool-card">
+                    <h3>📊 Internal Package Stats</h3>
+                    <select id="stats-timeframe">
+                        <option value="7d">Last 7 Days</option>
+                        <option value="30d" selected>Last 30 Days</option>
+                        <option value="90d">Last 90 Days</option>
+                    </select>
+                    <button id="load-stats-btn" class="btn-secondary">Load Stats</button>
+                    <div id="stats-result" class="stats-display"></div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Carrier Tools Section -->
+        <section id="carrier-tools-section" class="dashboard-section">
+            <h2>🚚 Carrier Management Tools</h2>
+            
+            <div class="tools-grid">
+                <div class="tool-card">
+                    <h3>📋 Validate Tracking Numbers</h3>
+                    <input type="text" id="validate-number" placeholder="Enter tracking number...">
+                    <button id="validate-btn" class="btn-secondary">Validate</button>
+                    <div id="validation-result"></div>
+                </div>
+                
+                <div class="tool-card">
+                    <h3>📦 Bulk Track Packages</h3>
+                    <textarea id="bulk-numbers" placeholder="Enter multiple tracking numbers (one per line)..."></textarea>
+                    <button id="bulk-track-btn" class="btn-secondary">Bulk Track</button>
+                    <div id="bulk-results"></div>
+                </div>
+                
+                <div class="tool-card">
+                    <h3>🔄 Refresh All Tracking</h3>
+                    <p>Update tracking status for all active shipments</p>
+                    <button id="refresh-all-btn" class="btn-warning">Refresh All Tracking</button>
+                    <div id="refresh-result"></div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Admin Panel Section -->
+        <section id="admin-panel-section" class="dashboard-section">
+            <h2>👑 Administrative Dashboard</h2>
+            
+            <!-- Admin Navigation -->
+            <div class="admin-nav-tabs">
+                <button class="admin-tab active" data-tab="overview">📊 Overview</button>
+                <button class="admin-tab" data-tab="packages">📦 All Packages</button>
+                <button class="admin-tab" data-tab="workers">👥 Worker Performance</button>
+                <button class="admin-tab" data-tab="issues">⚠️ Issue Management</button>
+                <button class="admin-tab" data-tab="audit">🔍 Activity Audit</button>
+            </div>
+
+            <!-- Admin Overview Tab -->
+            <div id="admin-overview-tab" class="admin-tab-content active">
+                <h3>📈 System Overview</h3>
+                
+                <div class="admin-stats-grid">
+                    <div class="stat-card">
+                        <h4>📦 Total Packages</h4>
+                        <div class="stat-number" id="admin-total-packages">-</div>
+                        <div class="stat-change" id="admin-packages-change">-</div>
+                    </div>
+                    
+                    <div class="stat-card">
+                        <h4>👥 Active Workers</h4>
+                        <div class="stat-number" id="admin-active-workers">-</div>
+                        <div class="stat-change" id="admin-workers-change">-</div>
+                    </div>
+                    
+                    <div class="stat-card">
+                        <h4>⚠️ Open Issues</h4>
+                        <div class="stat-number" id="admin-open-issues">-</div>
+                        <div class="stat-change" id="admin-issues-change">-</div>
+                    </div>
+                    
+                    <div class="stat-card">
+                        <h4>⏱️ Avg Processing Time</h4>
+                        <div class="stat-number" id="admin-avg-processing">-</div>
+                        <div class="stat-change" id="admin-processing-change">-</div>
+                    </div>
+                </div>
+
+                <div class="admin-charts-grid">
+                    <div class="chart-card">
+                        <h4>📊 Top Performing Workers</h4>
+                        <div id="top-performers-chart" class="chart-container">
+                            <div class="loading-chart">Loading chart data...</div>
+                        </div>
+                    </div>
+                    
+                    <div class="chart-card">
+                        <h4>🚚 Carrier Performance</h4>
+                        <div id="carrier-performance-chart" class="chart-container">
+                            <div class="loading-chart">Loading chart data...</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="recent-activity-card">
+                    <h4>🕒 Recent System Activity</h4>
+                    <div id="admin-recent-activity" class="activity-feed">
+                        <div class="loading-activity">Loading recent activity...</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Admin Packages Tab -->
+            <div id="admin-packages-tab" class="admin-tab-content">
+                <h3>📦 Package Management</h3>
+                
+                <div class="admin-filters">
+                    <div class="filter-group">
+                        <label>Status:</label>
+                        <select id="admin-filter-status">
+                            <option value="">All Statuses</option>
+                            <option value="SCANNED_IN">Scanned In</option>
+                            <option value="PROCESSING">Processing</option>
+                            <option value="READY_PICKUP">Ready for Pickup</option>
+                            <option value="DELIVERED">Delivered</option>
+                            <option value="EXCEPTION">Exception</option>
+                        </select>
+                    </div>
+                    
+                    <div class="filter-group">
+                        <label>Carrier:</label>
+                        <select id="admin-filter-carrier">
+                            <option value="">All Carriers</option>
+                            <option value="UPS">UPS</option>
+                            <option value="USPS">USPS</option>
+                            <option value="FEDEX">FedEx</option>
+                            <option value="AMAZON">Amazon</option>
+                            <option value="INTERNAL">Internal</option>
+                        </select>
+                    </div>
+                    
+                    <div class="filter-group">
+                        <label>Worker:</label>
+                        <select id="admin-filter-worker">
+                            <option value="">All Workers</option>
+                        </select>
+                    </div>
+                    
+                    <div class="filter-group">
+                        <label>Date From:</label>
+                        <input type="date" id="admin-filter-date-from">
+                    </div>
+                    
+                    <div class="filter-group">
+                        <label>Date To:</label>
+                        <input type="date" id="admin-filter-date-to">
+                    </div>
+                    
+                    <button id="apply-filters-btn" class="btn-primary">Apply Filters</button>
+                    <button id="clear-filters-btn" class="btn-secondary">Clear</button>
+                </div>
+
+                <div id="admin-packages-table" class="admin-table-container">
+                    <div class="loading-table">Loading packages...</div>
+                </div>
+                
+                <div id="admin-packages-pagination" class="pagination-container"></div>
+            </div>
+
+            <!-- Admin Workers Tab -->
+            <div id="admin-workers-tab" class="admin-tab-content">
+                <h3>👥 Worker Performance Analysis</h3>
+                
+                <div class="worker-summary-grid">
+                    <div class="worker-card" id="worker-summary-cards">
+                        <div class="loading-workers">Loading worker data...</div>
+                    </div>
+                </div>
+                
+                <div class="worker-detail-section">
+                    <h4>📊 Detailed Worker Analysis</h4>
+                    <div id="worker-performance-details" class="performance-details">
+                        <p class="select-worker-msg">Select a worker above to view detailed performance metrics.</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Admin Issues Tab -->
+            <div id="admin-issues-tab" class="admin-tab-content">
+                <h3>⚠️ Issue Management Dashboard</h3>
+                
+                <div class="issue-stats-row">
+                    <div class="issue-stat-card">
+                        <h5>Open Issues</h5>
+                        <div class="issue-count open" id="issues-open-count">-</div>
+                    </div>
+                    <div class="issue-stat-card">
+                        <h5>In Progress</h5>
+                        <div class="issue-count progress" id="issues-progress-count">-</div>
+                    </div>
+                    <div class="issue-stat-card">
+                        <h5>Resolved</h5>
+                        <div class="issue-count resolved" id="issues-resolved-count">-</div>
+                    </div>
+                    <div class="issue-stat-card">
+                        <h5>Avg Resolution Time</h5>
+                        <div class="issue-time" id="issues-avg-time">-</div>
+                    </div>
+                </div>
+
+                <div class="issues-filters">
+                    <select id="issue-status-filter">
+                        <option value="all">All Statuses</option>
+                        <option value="OPEN">Open</option>
+                        <option value="IN_PROGRESS">In Progress</option>
+                        <option value="RESOLVED">Resolved</option>
+                        <option value="ESCALATED">Escalated</option>
+                    </select>
+                    
+                    <select id="issue-priority-filter">
+                        <option value="">All Priorities</option>
+                        <option value="LOW">Low</option>
+                        <option value="MEDIUM">Medium</option>
+                        <option value="HIGH">High</option>
+                        <option value="URGENT">Urgent</option>
+                    </select>
+                    
+                    <select id="issue-assignee-filter">
+                        <option value="">All Assignees</option>
+                    </select>
+                    
+                    <button id="load-issues-btn" class="btn-primary">Load Issues</button>
+                </div>
+
+                <div id="admin-issues-list" class="issues-list">
+                    <div class="loading-issues">Loading issues...</div>
+                </div>
+            </div>
+
+            <!-- Admin Audit Tab -->
+            <div id="admin-audit-tab" class="admin-tab-content">
+                <h3>🔍 Activity Audit Trail</h3>
+                
+                <div class="audit-controls">
+                    <div class="audit-filters">
+                        <select id="audit-worker-filter">
+                            <option value="">All Workers</option>
+                        </select>
+                        
+                        <select id="audit-action-filter">
+                            <option value="">All Actions</option>
+                            <option value="SCANNED_IN">Package Scanned</option>
+                            <option value="DELIVERED">Package Delivered</option>
+                            <option value="EXCEPTION">Exception Created</option>
+                            <option value="RESOLVED">Issue Resolved</option>
+                        </select>
+                        
+                        <input type="date" id="audit-date-from" placeholder="From Date">
+                        <input type="date" id="audit-date-to" placeholder="To Date">
+                        
+                        <button id="load-audit-btn" class="btn-primary">Load Audit Trail</button>
+                    </div>
+                </div>
+
+                <div id="audit-trail-results" class="audit-results">
+                    <div class="loading-audit">Loading audit trail...</div>
+                </div>
+            </div>
+        </section>
+        
+    </main>
+
+    <!-- Loading Overlay -->
+    <div id="loading-overlay" class="loading-overlay" style="display: none;">
+        <div class="spinner"></div>
+        <p>Loading...</p>
+    </div>
+
+    <script src="scripts/api-client.js"></script>
+    <script src="scripts/dashboard.js"></script>
 </body>
 </html>
