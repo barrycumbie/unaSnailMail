@@ -56,8 +56,14 @@ const corsOptions = {
     // Allow requests with no origin (like mobile apps or curl requests)
     if (!origin) return callback(null, true);
     
+    // If CORS_ORIGINS is *, allow all origins
+    if (CONFIG.CORS.ORIGINS === '*' || (Array.isArray(CONFIG.CORS.ORIGINS) && CONFIG.CORS.ORIGINS.includes('*'))) {
+      console.log('CORS ALLOWED (wildcard):', origin);
+      return callback(null, true);
+    }
+    
     // Check against environment-specific allowed origins
-    if (CONFIG.CORS.ORIGINS.includes(origin)) {
+    if (Array.isArray(CONFIG.CORS.ORIGINS) && CONFIG.CORS.ORIGINS.includes(origin)) {
       console.log('CORS ALLOWED:', origin);
       callback(null, true);
     } else if (isLocalhost() && origin.includes('localhost')) {
