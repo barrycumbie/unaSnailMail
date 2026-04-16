@@ -119,25 +119,27 @@ export const CONFIG = {
   
   // CORS origins based on environment
   CORS: {
-    ORIGINS: ENV.isLocalhost 
-      ? [
-          `http://localhost:${ENV.port}`,
-          'http://localhost:3000',
-          'http://localhost:3001', 
-          'http://localhost:5173',
-          'http://127.0.0.1:3000',
-          'http://0.0.0.0:3000'
-        ]
-      : ENV.isProduction
+    ORIGINS: process.env.CORS_ORIGINS 
+      ? process.env.CORS_ORIGINS.split(',').map(origin => origin.trim())
+      : ENV.isLocalhost 
         ? [
-            'https://mail.una.edu',
-            'https://admin.mail.una.edu',
-            'https://demo.mail.una.edu'
+            `http://localhost:${ENV.port}`,
+            'http://localhost:3000',
+            'http://localhost:3001', 
+            'http://localhost:5173',
+            'http://127.0.0.1:3000',
+            'http://0.0.0.0:3000'
           ]
-        : [
-            `https://${ENV.hostname}`,
-            'http://localhost:3000'
-          ]
+        : ENV.isProduction
+          ? [
+              'https://mail.una.edu',
+              'https://admin.mail.una.edu',
+              'https://demo.mail.una.edu'
+            ]
+          : [
+              `https://${ENV.hostname}`,
+              'http://localhost:3000'
+            ]
   },
   
   // Rate limiting

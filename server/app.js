@@ -50,16 +50,22 @@ if (CONFIG.SECURITY.HELMET_ENABLED) {
 // CORS configuration with environment-aware origins
 const corsOptions = {
   origin: function (origin, callback) {
+    console.log('CORS check - Origin:', origin);
+    console.log('CORS check - Allowed origins:', CONFIG.CORS.ORIGINS);
+    
     // Allow requests with no origin (like mobile apps or curl requests)
     if (!origin) return callback(null, true);
     
     // Check against environment-specific allowed origins
     if (CONFIG.CORS.ORIGINS.includes(origin)) {
+      console.log('CORS ALLOWED:', origin);
       callback(null, true);
     } else if (isLocalhost() && origin.includes('localhost')) {
       // Allow any localhost origin in development
+      console.log('CORS ALLOWED (localhost):', origin);
       callback(null, true);
     } else {
+      console.log('CORS REJECTED:', origin, 'not in', CONFIG.CORS.ORIGINS);
       callback(new Error('Not allowed by CORS'));
     }
   },
