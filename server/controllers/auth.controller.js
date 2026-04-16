@@ -20,8 +20,11 @@ import { CONFIG, isLocalhost } from '../config/environment.js';
  */
 export const recipientLogin = async (req, res, next) => {
   try {
+    console.log('Recipient login attempt:', req.body.email);
+    
     const { error, value } = validateUserLogin(req.body);
     if (error) {
+      console.log('Recipient validation error:', error.details);
       return res.status(400).json({
         success: false,
         message: formatValidationError(error)
@@ -36,6 +39,8 @@ export const recipientLogin = async (req, res, next) => {
       userType: 'recipient',
       isActive: true 
     });
+    
+    console.log('Found recipient user:', user ? 'YES' : 'NO');
     
     if (!user) {
       return res.status(401).json({
@@ -92,6 +97,8 @@ export const recipientLogin = async (req, res, next) => {
     });
     
   } catch (error) {
+    console.error('Recipient login error:', error);
+    console.error('Error stack:', error.stack);
     next(error);
   }
 };
