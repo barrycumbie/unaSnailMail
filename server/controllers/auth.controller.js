@@ -101,8 +101,11 @@ export const recipientLogin = async (req, res, next) => {
  */
 export const delivererLogin = async (req, res, next) => {
   try {
+    console.log('Deliverer login attempt:', req.body.email);
+    
     const { error, value } = validateUserLogin(req.body);
     if (error) {
+      console.log('Validation error:', error.details);
       return res.status(400).json({
         success: false,
         message: formatValidationError(error)
@@ -117,6 +120,11 @@ export const delivererLogin = async (req, res, next) => {
       userType: 'deliverer',
       isActive: true 
     });
+    
+    console.log('Found user:', user ? 'YES' : 'NO');
+    if (user) {
+      console.log('User delivererInfo:', user.delivererInfo);
+    }
     
     if (!user) {
       return res.status(401).json({
@@ -152,10 +160,17 @@ export const delivererLogin = async (req, res, next) => {
     // Update last login and set permissions based on level
     user.lastLogin = new Date();
     
+    // Ensure delivererInfo exists and has proper structure
+    if (!user.delivererInfo) {
+      return res.status(500).json({
+        success: false,
+        message: 'User account is missing required deliverer information'
+      });
+    }
+    
     // Set permissions based on level if not already set
     if (!user.delivererInfo.permissions || user.delivererInfo.permissions.length === 0) {
       user.delivererInfo.permissions = User.getPermissionsByLevel(user.delivererInfo.level);
-      await user.save();
     }
     
     await user.save();
@@ -174,9 +189,9 @@ export const delivererLogin = async (req, res, next) => {
           lastName: user.lastName,
           userType: user.userType,
           delivererInfo: {
-            level: user.delivererInfo.level,
-            permissions: user.delivererInfo.permissions,
-            department: user.delivererInfo.department
+            level: user.delivererInfo?.level || 1,
+            permissions: user.delivererInfo?.permissions || [],
+            department: user.delivererInfo?.department || 'Mail Room'
           }
         },
         ...tokens
@@ -184,6 +199,8 @@ export const delivererLogin = async (req, res, next) => {
     });
     
   } catch (error) {
+    console.error('Deliverer login error:', error);
+    console.error('Error stack:', error.stack);
     next(error);
   }
 };
@@ -193,6 +210,11 @@ export const delivererLogin = async (req, res, next) => {
  */
 export const demoLogin = async (req, res, next) => {
   try {
+    console.log('Demo login attempt:', req.body);
+    console.log('Environment:', CONFIG.ENVIRONMENT);
+    console.log('Is Production:', CONFIG.IS_PRODUCTION);
+    console.log('JWT Secret exists:', !!CONFIG.JWT.SECRET);
+    
     const { error, value } = validateDemoAccess(req.body);
     if (error) {
       return res.status(400).json({
@@ -206,6 +228,7 @@ export const demoLogin = async (req, res, next) => {
     // For localhost, allow access without demo code or accept 'LOCALHOST'
     if (isLocalhost()) {
       if (!demoCode || CONFIG.DEMO.CODES.includes(demoCode) || demoCode === 'LOCALHOST') {
+        console.log('Generating localhost demo token...');
         const token = generateLocalhostDemoToken();
         
         return res.json({
@@ -244,7 +267,9 @@ export const demoLogin = async (req, res, next) => {
     }
     
     // Generate regular demo token
+    console.log('Generating regular demo token...');
     const token = generateDemoToken();
+    console.log('Demo token generated successfully');
     
     res.json({
       success: true,

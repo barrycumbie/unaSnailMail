@@ -127,21 +127,29 @@ export const hasMinimumLevel = (userLevel, requiredLevel) => {
  * Generate demo user token (limited permissions)
  */
 export const generateDemoToken = () => {
-  const payload = {
-    id: 'demo-user',
-    email: 'demo@una.edu',
-    userType: 'deliverer',
-    permissions: ['demo_access', 'scan_mail', 'update_status'],
-    level: 1,
-    isDemoUser: true,
-    environment: CONFIG.ENVIRONMENT
-  };
-  
-  return jwt.sign(payload, CONFIG.JWT.SECRET, {
-    expiresIn: CONFIG.DEMO.TOKEN_EXPIRE,
-    issuer: 'una-snail-mail',
-    subject: 'demo-user'
-  });
+  try {
+    const payload = {
+      id: 'demo-user',
+      email: 'demo@una.edu',
+      userType: 'deliverer',
+      permissions: ['demo_access', 'scan_mail', 'update_status'],
+      level: 1,
+      isDemoUser: true,
+      environment: CONFIG.ENVIRONMENT
+    };
+    
+    console.log('Signing demo token with secret:', CONFIG.JWT.SECRET ? 'SECRET_SET' : 'SECRET_MISSING');
+    console.log('Token expire:', CONFIG.DEMO.TOKEN_EXPIRE);
+    
+    return jwt.sign(payload, CONFIG.JWT.SECRET, {
+      expiresIn: CONFIG.DEMO.TOKEN_EXPIRE,
+      issuer: 'una-snail-mail',
+      subject: 'demo-user'
+    });
+  } catch (error) {
+    console.error('JWT Generation Error:', error.message);
+    throw new Error(`JWT Generation failed: ${error.message}`);
+  }
 };
 
 /**
@@ -152,25 +160,32 @@ export const generateLocalhostDemoToken = () => {
     return generateDemoToken();
   }
   
-  const payload = {
-    id: 'localhost-demo-user',
-    email: 'localhost-demo@una.edu',
-    userType: 'deliverer',
-    permissions: [
-      'demo_access', 'scan_mail', 'update_status', 
-      'view_reports', 'manage_users' // Extended perms for local dev
-    ],
-    level: 2, // Higher level for local dev
-    isDemoUser: true,
-    isLocalhost: true,
-    environment: CONFIG.ENVIRONMENT
-  };
-  
-  return jwt.sign(payload, CONFIG.JWT.SECRET, {
-    expiresIn: '24h', // Longer for local development
-    issuer: 'una-snail-mail',
-    subject: 'localhost-demo-user'
-  });
+  try {
+    const payload = {
+      id: 'localhost-demo-user',
+      email: 'localhost-demo@una.edu',
+      userType: 'deliverer',
+      permissions: [
+        'demo_access', 'scan_mail', 'update_status', 
+        'view_reports', 'manage_users' // Extended perms for local dev
+      ],
+      level: 2, // Higher level for local dev
+      isDemoUser: true,
+      isLocalhost: true,
+      environment: CONFIG.ENVIRONMENT
+    };
+    
+    console.log('Signing localhost demo token with secret:', CONFIG.JWT.SECRET ? 'SECRET_SET' : 'SECRET_MISSING');
+    
+    return jwt.sign(payload, CONFIG.JWT.SECRET, {
+      expiresIn: '24h', // Longer for local development
+      issuer: 'una-snail-mail',
+      subject: 'localhost-demo-user'
+    });
+  } catch (error) {
+    console.error('Localhost JWT Generation Error:', error.message);
+    throw new Error(`Localhost JWT Generation failed: ${error.message}`);
+  }
 };
 
 /**
